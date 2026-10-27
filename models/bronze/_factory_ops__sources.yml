@@ -10,11 +10,26 @@ sources:
           - name: vin
             tests: [not_null, unique]
           - name: mat_cod
-            tests: [not_null]
+            tests:
+              - not_null
+              - relationships:
+                  arguments:
+                    to: source('factory_ops', 'materials')
+                    field: mat_cod
           - name: factory_id
-            tests: [not_null]
+            tests:
+              - not_null
+              - relationships:
+                  arguments:
+                    to: source('factory_ops', 'factories')
+                    field: factory_id
           - name: line_id
-            tests: [not_null]
+            tests:
+              - not_null
+              - relationships:
+                  arguments:
+                    to: source('factory_ops', 'assembly_lines')
+                    field: line_id
           - name: production_date
             tests: [not_null]
 
