@@ -1,0 +1,33 @@
+name: Deploy to Supabase (production)
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  dbt-deploy:
+    runs-on: ubuntu-latest
+    env:
+      DBT_PROFILES_DIR: ${{ github.workspace }}/ci
+      DBT_RUN_CACHE_DISABLED: "true"
+      DBT_HOST: ${{ secrets.DBT_HOST }}
+      DBT_PORT: ${{ secrets.DBT_PORT }}
+      DBT_USER: ${{ secrets.DBT_USER }}
+      DBT_PASSWORD: ${{ secrets.DBT_PASSWORD }}
+      DBT_DBNAME: ${{ secrets.DBT_DBNAME }}
+      DBT_SCHEMA: ${{ secrets.DBT_SCHEMA }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dbt
+        run: pip install -r requirements.txt
+
+      - name: dbt debug
+        run: dbt debug
+
+      - name: dbt build (deploy)
+        run: dbt build
