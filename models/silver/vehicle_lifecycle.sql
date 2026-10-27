@@ -2,14 +2,19 @@ select
     v.vin,
     m.vehicle_type,
     m.name as model,
+    m.base_price,
     f.name as manufactured_at_factory,
     al.line_name as assembly_line,
     v.production_date,
     dist.dispatch_date,
+    dist.arrival_date,
     d_dist.name as distributed_to_dealer,
     s.sale_date,
     d_sale.name as sold_by_dealer,
-    s.current_km
+    d_sale.city as sold_by_dealer_city,
+    s.current_km,
+    s.km_to_next_service,
+    s.estimated_km_to_breakdown
 
 from {{ source('factory_ops', 'vehicles') }} as v
 join {{ source('factory_ops', 'materials') }} as m on v.mat_cod = m.mat_cod
