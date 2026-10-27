@@ -1,0 +1,21 @@
+version: 2
+
+models:
+  - name: vehicle_lifecycle
+    description: >
+      Capa silver — vista 360º por vehículo: producción, distribución y venta.
+      Un vehículo que todavía no se ha distribuido o vendido aparece con esas
+      columnas en NULL (LEFT JOIN intencional).
+    columns:
+      - name: vin
+        tests: [not_null, unique]
+      - name: vehicle_type
+        tests: [not_null]
+      - name: model
+        tests: [not_null]
+      - name: manufactured_at_factory
+        tests: [not_null]
+      - name: assembly_line
+        tests: [not_null]
+      - name: production_date
+        tests: [not_null]

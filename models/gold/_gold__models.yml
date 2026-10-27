@@ -18,3 +18,56 @@ models:
         tests: [not_null]
       - name: daily_produced_units
         tests: [not_null]
+
+  - name: dealership_sales_performance
+    description: Capa gold — ventas, ingresos y ticket medio por concesionario.
+    columns:
+      - name: dealership_name
+        tests: [not_null]
+      - name: city
+        tests: [not_null]
+      - name: total_vehicles_sold
+        tests: [not_null]
+      - name: total_revenue_eur
+        tests: [not_null]
+      - name: avg_ticket_eur
+        tests: [not_null]
+
+  - name: vehicle_maintenance_alerts
+    description: >
+      Capa gold — vehículos vendidos con mantenimiento próximo/atrasado o
+      riesgo de avería inminente, según la telemetría más reciente.
+    columns:
+      - name: vin
+        tests: [not_null, unique]
+      - name: vehicle_model
+        tests: [not_null]
+      - name: dealership
+        tests: [not_null]
+      - name: factory_origin
+        tests: [not_null]
+      - name: status
+        tests:
+          - not_null
+          - accepted_values:
+              arguments:
+                values:
+                  - 'CRITICAL: Avería inminente'
+                  - 'WARNING: Mantenimiento atrasado'
+                  - 'OK'
+
+  - name: logistics_transit_and_stock_days
+    description: >
+      Capa gold — días medios de tránsito (fábrica → concesionario) y días
+      medios en stock hasta la venta, por modelo/fábrica/concesionario.
+    columns:
+      - name: model_name
+        tests: [not_null]
+      - name: factory_name
+        tests: [not_null]
+      - name: dealership_name
+        tests: [not_null]
+      - name: avg_transit_days
+        tests: [not_null]
+      - name: avg_days_in_stock
+        tests: [not_null]
