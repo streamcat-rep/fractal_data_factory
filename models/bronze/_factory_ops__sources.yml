@@ -1,0 +1,42 @@
+version: 2
+
+sources:
+  - name: factory_ops
+    description: Capa bronze — tablas operativas de fábrica tal cual llegan a Supabase.
+    schema: factory_ops
+    tables:
+      - name: vehicles
+        columns:
+          - name: vin
+            tests: [not_null, unique]
+          - name: mat_cod
+            tests: [not_null]
+          - name: factory_id
+            tests: [not_null]
+          - name: line_id
+            tests: [not_null]
+          - name: production_date
+            tests: [not_null]
+
+      - name: factories
+        columns:
+          - name: factory_id
+            tests: [not_null, unique]
+          - name: name
+            tests: [not_null]
+
+      - name: assembly_lines
+        columns:
+          - name: line_id
+            tests: [not_null, unique]
+          - name: factory_id
+            tests: [not_null]
+          - name: line_name
+            tests: [not_null]
+
+      - name: materials
+        columns:
+          - name: mat_cod
+            tests: [not_null, unique]
+          - name: name
+            tests: [not_null]
