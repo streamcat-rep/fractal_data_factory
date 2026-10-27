@@ -3,3 +3,11 @@ dbt_packages/
 logs/
 .venv/
 .env
+
+airflow/.env
+airflow/logs/
+airflow/plugins/
+airflow/config/
+
+webui/server.out.log
+webui/server.err.log
