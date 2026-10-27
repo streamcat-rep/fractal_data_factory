@@ -1,9 +1,11 @@
 from __future__ import annotations
 
+import json
 import os
 import queue
 import subprocess
 import threading
+import time
 from pathlib import Path
 
 from dotenv import load_dotenv
@@ -11,6 +13,8 @@ from flask import Flask, Response, render_template_string, request
 
 PROJECT_DIR = Path(__file__).resolve().parent.parent
 VENV_DBT = PROJECT_DIR / ".venv" / "Scripts" / "dbt.exe"
+RUNS_DIR = Path(__file__).resolve().parent / "runs"
+RUNS_DIR.mkdir(exist_ok=True)
 
 load_dotenv(PROJECT_DIR / ".env")
 
@@ -105,6 +109,15 @@ def _run_dbt(select: str) -> None:
     process.wait()
     log_queue.put(f"[exit code {process.returncode}]")
     log_queue.put("__DONE__")
+
+    run_record = {
+        "timestamp": int(time.time()),
+        "select": select,
+        "exit_code": process.returncode,
+    }
+    run_file = RUNS_DIR / f"{run_record['timestamp']}.json"
+    run_file.write_text(json.dumps(run_record), encoding="utf-8")
+
     with lock:
         state["running"] = False
 
