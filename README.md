@@ -31,3 +31,29 @@ El perfil (`data_factory`) se busca en `~/.dbt/profiles.yml`, no está en el rep
 - `DBT_PASSWORD`
 - `DBT_DBNAME`
 - `DBT_SCHEMA`
+
+## Lanzar dbt desde el navegador (local)
+
+`webui/` monta una página local (Flask) para lanzar `dbt run` sin terminal:
+
+```powershell
+webui\start.ps1
+```
+
+Abre http://127.0.0.1:5005, deja `--select` vacío para correr todos los modelos, o escribe un
+modelo/path/`tag:xxx` para una selección concreta. Muestra el log de dbt en tiempo real.
+
+### Alternativa: Apache Airflow (pendiente, requiere Docker/WSL2)
+
+`airflow/` tiene un docker-compose (CeleryExecutor, imagen oficial 3.3.2) con un DAG `dbt_run`
+equivalente (mismo parámetro `select`) para cuando haya Docker Desktop + WSL2 disponibles
+(requiere privilegios de administrador en Windows para instalar WSL). Para levantarlo:
+
+```powershell
+cd airflow
+docker compose build
+docker compose up airflow-init
+docker compose up -d
+```
+
+UI en http://localhost:8080 (usuario/clave por defecto en `airflow/.env`, no versionado).
