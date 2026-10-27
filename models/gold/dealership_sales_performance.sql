@@ -1,14 +1,15 @@
 select
-    d.name as dealership_name,
-    d.city,
-    count(s.vin) as total_vehicles_sold,
-    sum(m.base_price) as total_revenue_eur,
-    round(avg(m.base_price), 2) as avg_ticket_eur
+    sold_by_dealer as dealership_name,
+    sold_by_dealer_city as city,
+    count(vin) as total_vehicles_sold,
+    sum(base_price) as total_revenue_eur,
+    round(avg(base_price), 2) as avg_ticket_eur
 
-from {{ source('factory_ops', 'sales_and_telemetry') }} as s
-join {{ source('factory_ops', 'dealerships') }} as d on s.sold_by_dealer_id = d.dealer_id
-join {{ source('factory_ops', 'vehicles') }} as v on s.vin = v.vin
-join {{ source('factory_ops', 'materials') }} as m on v.mat_cod = m.mat_cod
+from {{ ref('vehicle_lifecycle') }}
+
+-- sold_by_dealer viene de un LEFT JOIN resuelto vía sold_by_dealer_id (not_null en bronze);
+-- no-nulo aquí significa "la venta tiene un dealer real", de forma más fiable que mirar sale_date.
+where sold_by_dealer is not null
 
 group by 1, 2
 order by total_revenue_eur desc
