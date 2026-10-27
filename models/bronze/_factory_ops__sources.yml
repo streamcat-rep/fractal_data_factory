@@ -55,3 +55,47 @@ sources:
             tests: [not_null, unique]
           - name: name
             tests: [not_null]
+
+      - name: dealerships
+        columns:
+          - name: dealer_id
+            tests: [not_null, unique]
+          - name: name
+            tests: [not_null]
+          - name: city
+            tests: [not_null]
+
+      - name: distribution
+        columns:
+          - name: vin
+            tests:
+              - not_null
+              - relationships:
+                  arguments:
+                    to: source('factory_ops', 'vehicles')
+                    field: vin
+          - name: dealer_id
+            tests:
+              - not_null
+              - relationships:
+                  arguments:
+                    to: source('factory_ops', 'dealerships')
+                    field: dealer_id
+
+      - name: sales_and_telemetry
+        columns:
+          - name: vin
+            tests:
+              - not_null
+              - unique
+              - relationships:
+                  arguments:
+                    to: source('factory_ops', 'vehicles')
+                    field: vin
+          - name: sold_by_dealer_id
+            tests:
+              - not_null
+              - relationships:
+                  arguments:
+                    to: source('factory_ops', 'dealerships')
+                    field: dealer_id
